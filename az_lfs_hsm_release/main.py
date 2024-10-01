@@ -22,7 +22,7 @@ def main():
     if os.path.isdir(fileToRelease):
         logger.error('HSM operates on files, not on folders. The input path refers to a folder.')
     elif os.path.exists(fileToRelease):
-        LFSBlobClient().lfs_hsm_release(fileToRelease)
+        LFSBlobClient(logger=logger).lfs_hsm_release(fileToRelease)
     else:
         logger.error('The file provided does not exist on the system')
     
