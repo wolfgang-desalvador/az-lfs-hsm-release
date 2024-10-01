@@ -33,10 +33,11 @@ class LFSBlobClient(BlobServiceClient):
 
     def lfs_hsm_release(self, filePath):
         absolutePath = os.path.abspath(filePath)
-       
+
         client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
         if checkFileStatus(absolutePath):
             if not client.exists():
+                logging.info(f"Starting rearchival since the file {absolutePath} is not on blob.")
                 self.rearchive(absolutePath)
 
             try:
