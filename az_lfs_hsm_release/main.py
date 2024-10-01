@@ -10,7 +10,7 @@ def main():
 
     args, extras = parser.parse_known_args()
     
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.WARN)
     if not extras:
         logging.error('No filename specified.')
         sys.exit(1)
