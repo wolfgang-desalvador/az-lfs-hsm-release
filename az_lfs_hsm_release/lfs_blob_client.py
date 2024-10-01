@@ -18,7 +18,7 @@ class LFSBlobClient(BlobServiceClient):
         super().__init__(self.accountURL, credential=DefaultAzureCredential(exclude_workload_identity_credential=True, exclude_environment_credential=True), **kwargs)
 
     def rearchive(self, fullPath):
-        logging.info(f"{fullPath} starting rearchival process.")
+        logging.warning(f"{fullPath} starting rearchival process.")
         if not os.path.exists(fullPath):
             logging.error(f"{fullPath} doesn't exist.")
         elif "released" in str(subprocess.check_output(["lfs", "hsm_state", fullPath]).decode()):
@@ -27,7 +27,7 @@ class LFSBlobClient(BlobServiceClient):
             subprocess.check_output(["lfs", "hsm_set", "--dirty", fullPath])
             subprocess.check_output(["lfs", "hsm_archive", fullPath])
             while "ARCHIVE" in str(subprocess.check_output(["lfs", "hsm_action", fullPath]).decode()):
-                logging.info(f"{fullPath} still rearchiving...")
+                logging.warning(f"{fullPath} still rearchiving...")
                 time.sleep(5)
             logging.info(f"{fullPath} rearchived.")
 
@@ -37,7 +37,7 @@ class LFSBlobClient(BlobServiceClient):
         client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
         if checkFileStatus(absolutePath):
             if not client.exists():
-                logging.info(f"Starting rearchival since the file {absolutePath} is not on blob.")
+                logging.warning(f"Starting rearchival since the file {absolutePath} is not on blob.")
                 self.rearchive(absolutePath)
 
             try:
