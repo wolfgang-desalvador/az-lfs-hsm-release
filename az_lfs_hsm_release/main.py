@@ -10,21 +10,20 @@ def main():
 
     args, extras = parser.parse_known_args()
     
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(level=logging.INFO)
     if not extras:
-        logger.error('No filename specified.')
+        logging.error('No filename specified.')
         sys.exit(1)
 
     fileToRelease = extras[-1]
     
 
     if os.path.isdir(fileToRelease):
-        logger.error('HSM operates on files, not on folders. The input path refers to a folder.')
+        logging.error('HSM operates on files, not on folders. The input path refers to a folder.')
     elif os.path.exists(fileToRelease):
-        LFSBlobClient(logger=logger).lfs_hsm_release(fileToRelease)
+        LFSBlobClient().lfs_hsm_release(fileToRelease)
     else:
-        logger.error('The file provided does not exist on the system')
+        logging.error('The file provided does not exist on the system')
     
 
 if __name__ == '__main__':
