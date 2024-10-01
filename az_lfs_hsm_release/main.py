@@ -11,7 +11,7 @@ def main():
     args, extras = parser.parse_known_args()
     
     logger = logging.getLogger()
-
+    logger.setLevel(logging.INFO)
     if not extras:
         logger.error('No filename specified.')
         sys.exit(1)
@@ -26,3 +26,6 @@ def main():
     else:
         logger.error('The file provided does not exist on the system')
     
+
+if __name__ == '__main__':
+    main()

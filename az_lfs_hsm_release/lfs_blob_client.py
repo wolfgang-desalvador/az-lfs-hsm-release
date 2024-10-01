@@ -37,11 +37,14 @@ class LFSBlobClient(BlobServiceClient):
         logger = logging.getLogger()
 
         absolutePath = os.path.abspath(filePath)
-        if not checkFileStatus(absolutePath):
-            self.rearchive(absolutePath)
+       
+        client = self.get_blob_client(container=self.containerName, blob=get_relative_path(absolutePath))
+        if checkFileStatus(absolutePath):
+            if not client.exists():
+                self.rearchive(absolutePath)
 
-        try:
-            subprocess.check_output(["lfs", "hsm_release", absolutePath])
-        except subprocess.CalledProcessError as error:
-            logger.error("Failed in setting hsm_state correctly. Please check the file status.")
-            raise error
+            try:
+                subprocess.check_output(["lfs", "hsm_release", absolutePath])
+            except subprocess.CalledProcessError as error:
+                logger.error("Failed in setting hsm_state correctly. Please check the file status.")
+                raise error
